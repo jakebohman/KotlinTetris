@@ -15,7 +15,7 @@ fun GameArea(state: GameState, modifier: Modifier = Modifier) {
   val hudHeight = 96.dp
   Box(
     modifier = modifier
-      .border(4.dp, Color.White)
+      .border(1.dp, Color.White)
       .background(Color.Black)
       .padding(6.dp)
   ) {

@@ -33,7 +33,7 @@ fun ControllerPanel(
   modifier: Modifier = Modifier
 ) {
   Row(
-    modifier = modifier.padding(start = 12.dp, end = 12.dp, top = 36.dp, bottom = 16.dp),
+    modifier = modifier.padding(start = 12.dp, end = 12.dp, top = 36.dp, bottom = 0.dp),
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically
   ) {
@@ -87,17 +87,17 @@ fun ControllerPanel(
           }
           drawPath(p, color = Color.White)
         }
-        tri(Offset(cx - s, cy), Offset(-1f, 0f)) // left
-        tri(Offset(cx + s, cy), Offset(1f, 0f))  // right
-        tri(Offset(cx, cy - s), Offset(0f, -1f)) // up
-        tri(Offset(cx, cy + s), Offset(0f, 1f))  // down
+        tri(Offset(cx - s*3/4, cy), Offset(-1f, 0f)) // left
+        tri(Offset(cx + s*3/4, cy), Offset(1f, 0f))  // right
+        tri(Offset(cx, cy - s*3/4), Offset(0f, -1f)) // up
+        tri(Offset(cx, cy + s*3/4), Offset(0f, 1f))  // down
       }
     }
 
     // A/B buttons panel
     Row(horizontalArrangement = Arrangement.spacedBy(24.dp), verticalAlignment = Alignment.CenterVertically) {
-      FramedActionButton(label = "A", onPress = onA)
       FramedActionButton(label = "B", onPress = onB)
+      FramedActionButton(label = "A", onPress = onA)
     }
   }
 }
@@ -110,7 +110,7 @@ private fun FramedActionButton(label: String, onPress: () -> Unit) {
     modifier = Modifier
       .size(84.dp)
       .background(Color.White, RoundedCornerShape(8.dp))
-      .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
+      //.border(1.dp, Color.Black, RoundedCornerShape(8.dp))
   ) {
     // Red circular button with thin black border
     Box(

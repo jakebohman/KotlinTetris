@@ -16,7 +16,7 @@ fun GameScreen(vm: GameViewModel = viewModel()) {
   val state by vm.state.collectAsState()
 
   val controllerHeight = 240.dp
-  val overlap = 24.dp
+  val overlap = 120.dp
 
   Box(Modifier.fillMaxSize().background(Color.Black)) {
     // Gray controller background anchored to bottom, behind the game area
