@@ -12,8 +12,8 @@ import com.example.kotlintetris.model.Point
 
 @Composable
 fun RetroBoard(state: GameState, modifier: Modifier = Modifier) {
-  val bgColor = Color.Black
-  val gridColor = Color(0x33FFFFFF)
+  val bgColor = Color(0xFF2E2E2E) // dark grey background
+  val gridColor = Color.Black      // black grid lines
   val w = 10
   val h = 20
 
@@ -23,15 +23,6 @@ fun RetroBoard(state: GameState, modifier: Modifier = Modifier) {
 
     val cellW = size.width / w
     val cellH = size.height / h
-    // Grid
-    for (x in 1 until w) {
-      val px = x * cellW
-      drawLine(color = gridColor, start = Offset(px, 0f), end = Offset(px, size.height), strokeWidth = 1f)
-    }
-    for (y in 1 until h) {
-      val py = y * cellH
-      drawLine(color = gridColor, start = Offset(0f, py), end = Offset(size.width, py), strokeWidth = 1f)
-    }
 
     // Visible window maps to bottom 20 rows of the model board
     val visibleStart = state.height - h
@@ -42,7 +33,7 @@ fun RetroBoard(state: GameState, modifier: Modifier = Modifier) {
       drawRect(
         color = Color(color).copy(alpha = alpha),
         topLeft = Offset(x * cellW, y * cellH),
-        size = Size(cellW - 1f, cellH - 1f)
+        size = Size(cellW, cellH)
       )
     }
 
@@ -70,6 +61,16 @@ fun RetroBoard(state: GameState, modifier: Modifier = Modifier) {
         val vy = p.y - visibleStart
         drawCell(p.x, vy, activeColor)
       }
+    }
+
+    // Grid lines on top (between every cell)
+    for (x in 1 until w) {
+      val px = x * cellW
+      drawLine(color = gridColor, start = Offset(px, 0f), end = Offset(px, size.height), strokeWidth = 1f)
+    }
+    for (y in 1 until h) {
+      val py = y * cellH
+      drawLine(color = gridColor, start = Offset(0f, py), end = Offset(size.width, py), strokeWidth = 1f)
     }
 
     // If paused, dim overlay
