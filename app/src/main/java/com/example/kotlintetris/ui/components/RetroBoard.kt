@@ -7,13 +7,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import com.example.kotlintetris.model.GameState
 import com.example.kotlintetris.model.Point
+import kotlin.math.floor
 
 @Composable
 fun RetroBoard(state: GameState, modifier: Modifier = Modifier) {
-  val bgColor = Color(0xFF2E2E2E) // dark grey background
-  val gridColor = Color.Black      // black grid lines
+  val bgColor = Color(0xFF111111) // fully opaque dark grey background
   val w = 10
   val h = 20
 
@@ -21,56 +22,96 @@ fun RetroBoard(state: GameState, modifier: Modifier = Modifier) {
     // Background
     drawRect(color = bgColor, size = size)
 
-    val cellW = size.width / w
-    val cellH = size.height / h
+    // Quantize cell size to integer pixels for uniform visuals
+    val rawCellW = size.width / w
+    val rawCellH = size.height / h
+    val cellW = floor(rawCellW).coerceAtLeast(1f)
+    val cellH = floor(rawCellH).coerceAtLeast(1f)
+    val boardW = cellW * w
+    val boardH = cellH * h
+    val offsetX = floor((size.width - boardW) / 2f)
+    val offsetY = floor((size.height - boardH) / 2f)
 
     // Visible window maps to bottom 20 rows of the model board
     val visibleStart = state.height - h
 
-    fun drawCell(x: Int, y: Int, color: Long, alpha: Float = 1f) {
-      if (x !in 0 until w) return
-      if (y !in 0 until h) return
+    fun cellTopLeft(x: Int, y: Int): Offset = Offset(offsetX + x * cellW, offsetY + y * cellH)
+
+    fun blend(c1: Color, c2: Color, t: Float): Color = Color(
+      red = c1.red + (c2.red - c1.red) * t,
+      green = c1.green + (c2.green - c1.green) * t,
+      blue = c1.blue + (c2.blue - c1.blue) * t,
+      alpha = c1.alpha // keep original alpha
+    )
+
+    fun drawBlock3D(x: Int, y: Int, colorLong: Long, alpha: Float = 1f) {
+      if (x !in 0 until w || y !in 0 until h) return
+      val baseColor = Color(colorLong).copy(alpha = alpha)
+      val topLeft = cellTopLeft(x, y)
+
+      // Base fill
+      drawRect(color = baseColor, topLeft = topLeft, size = Size(cellW, cellH))
+
+      // 3D effect parameters (approx 10% of cell size, min 2px)
+      val hiH = floor((cellH * 0.1f)).coerceAtLeast(2f)
+      val shW = floor((cellW * 0.1f)).coerceAtLeast(2f)
+
+      // Top highlight
+      val hiColor = blend(baseColor, Color.White, 0.3f)
       drawRect(
-        color = Color(color).copy(alpha = alpha),
-        topLeft = Offset(x * cellW, y * cellH),
-        size = Size(cellW, cellH)
+        color = hiColor,
+        topLeft = topLeft,
+        size = Size(cellW, hiH)
+      )
+
+      // Right-side shadow
+      val shColor = blend(baseColor, Color.Black, 0.3f)
+      drawRect(
+        color = shColor,
+        topLeft = Offset(topLeft.x + cellW - shW, topLeft.y),
+        size = Size(shW, cellH)
+      )
+
+      // Thin white border
+      drawRect(
+        color = Color.White,
+        topLeft = topLeft,
+        size = Size(cellW, cellH),
+        style = Stroke(width = 1f)
       )
     }
 
-    // Placed blocks
+    // Placed blocks with 3D effect
     state.board.forEachIndexed { index, t ->
       t?.let {
         val bx = index % state.width
         val by = index / state.width
         val vy = by - visibleStart
-        if (vy in 0 until h) drawCell(bx, vy, it.color)
+        if (vy in 0 until h) drawBlock3D(bx, vy, it.color)
       }
     }
 
-    // Ghost
+    // Ghost (kept simple and semi-transparent)
     state.ghost.forEach { p: Point ->
       val vy = p.y - visibleStart
-      drawCell(p.x, vy, 0xFFFFFFFF, 0.25f)
+      if (p.x in 0 until w && vy in 0 until h) {
+        val tl = cellTopLeft(p.x, vy)
+        drawRect(
+          color = Color.White.copy(alpha = 0.25f),
+          topLeft = tl,
+          size = Size(cellW, cellH)
+        )
+      }
     }
 
-    // Active piece
+    // Active (falling) piece with 3D effect
     val activeCells = state.active?.cells()
     val activeColor = state.active?.type?.color
     if (activeCells != null && activeColor != null) {
       activeCells.forEach { p ->
         val vy = p.y - visibleStart
-        drawCell(p.x, vy, activeColor)
+        if (p.x in 0 until w && vy in 0 until h) drawBlock3D(p.x, vy, activeColor)
       }
-    }
-
-    // Grid lines on top (between every cell)
-    for (x in 1 until w) {
-      val px = x * cellW
-      drawLine(color = gridColor, start = Offset(px, 0f), end = Offset(px, size.height), strokeWidth = 1f)
-    }
-    for (y in 1 until h) {
-      val py = y * cellH
-      drawLine(color = gridColor, start = Offset(0f, py), end = Offset(size.width, py), strokeWidth = 1f)
     }
 
     // If paused, dim overlay

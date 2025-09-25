@@ -1,16 +1,15 @@
 package com.example.kotlintetris.model
 
 enum class TetrominoType(val color: Long) {
-  I(0xFF55FFFF),
-  O(0xFFFFFF55),
-  T(0xFFAA55FF),
-  S(0xFF55FF55),
-  Z(0xFFFF5555),
-  J(0xFF5555FF),
-  L(0xFFFFAA55);
+  I(0xFF2CA6A6), // muted teal
+  O(0xFFD1C33E), // muted yellow
+  T(0xFF8B55B8), // muted purple
+  S(0xFF55B855), // muted green
+  Z(0xFFB84C4C), // muted red
+  J(0xFF4C5FC3), // muted blue
+  L(0xFFC2813E); // muted orange
 
   companion object {
-    fun bag(): MutableList<TetrominoType> = values().toMutableList().also { it.shuffle() }
+    fun bag(): MutableList<TetrominoType> = entries.toMutableList().also { it.shuffle() }
   }
 }
-
