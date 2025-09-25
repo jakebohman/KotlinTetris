@@ -17,7 +17,7 @@ fun GameArea(state: GameState, modifier: Modifier = Modifier) {
     modifier = modifier
       .border(1.dp, Color.White)
       .background(Color.Black)
-      .padding(6.dp)
+      //.padding(6.dp)
   ) {
     Column(Modifier.fillMaxWidth()) {
       Row(

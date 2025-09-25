@@ -20,8 +20,8 @@ import com.example.kotlintetris.ui.viewmodel.GameViewModel
 fun GameScreen(vm: GameViewModel = viewModel()) {
   val state by vm.state.collectAsState()
 
-  val controllerHeight = 240.dp
-  val overlap = 120.dp
+  val controllerHeight = 220.dp
+  val overlap = 80.dp
 
   Box(Modifier.fillMaxSize().background(Color.Black)) {
     // Controller background anchored to bottom; restore fixed height
@@ -80,11 +80,11 @@ fun GameScreen(vm: GameViewModel = viewModel()) {
       modifier = Modifier
         .fillMaxWidth()
         .align(Alignment.BottomCenter)
-        .padding(horizontal = 12.dp)
+        .padding(horizontal = 20.dp)
         .offset(y = -(controllerHeight - overlap)),
       contentAlignment = Alignment.Center
     ) {
-      GameArea(state = state, modifier = Modifier.fillMaxWidth(0.9f))
+      GameArea(state = state, modifier = Modifier.fillMaxWidth(0.85f))
     }
 
     // Pause button top-right

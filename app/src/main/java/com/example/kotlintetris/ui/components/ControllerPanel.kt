@@ -39,7 +39,7 @@ fun ControllerPanel(
     verticalAlignment = Alignment.CenterVertically
   ) {
     // D-pad: 5 black squares forming a cross
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.size(144.dp)) {
+    Box(contentAlignment = Alignment.Center, modifier = Modifier.size(160.dp)) {
       Canvas(modifier = Modifier
         .fillMaxSize()
         .pointerInput(Unit) {
@@ -114,7 +114,7 @@ fun ControllerPanel(
     Row(
       horizontalArrangement = Arrangement.spacedBy(24.dp),
       verticalAlignment = Alignment.CenterVertically,
-      modifier = Modifier.padding(top = 16.dp)
+      modifier = Modifier.padding(top = 64.dp)
     ) {
       FramedActionButton(label = "B", onPress = onB)
       FramedActionButton(label = "A", onPress = onA)
