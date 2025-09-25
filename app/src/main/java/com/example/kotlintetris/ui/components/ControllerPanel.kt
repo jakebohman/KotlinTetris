@@ -42,16 +42,31 @@ fun ControllerPanel(
       Canvas(modifier = Modifier
         .fillMaxSize()
         .pointerInput(Unit) {
-          detectTapGestures(onTap = { offset ->
-            val w = size.width; val h = size.height
-            val cx = w / 2f; val cy = h / 2f
-            val dx = offset.x - cx; val dy = offset.y - cy
-            if (kotlin.math.abs(dx) > kotlin.math.abs(dy)) {
-              if (dx < 0) onLeft() else onRight()
-            } else {
-              if (dy < 0) onUp() else onDownPress(true).also { onDownPress(false) }
+          detectTapGestures(
+            onPress = { offset ->
+              val w = size.width; val h = size.height
+              val cx = w / 2f; val cy = h / 2f
+              val dx = offset.x - cx; val dy = offset.y - cy
+              val horizontal = kotlin.math.abs(dx) > kotlin.math.abs(dy)
+              if (horizontal) {
+                if (dx < 0) onLeft() else onRight()
+                // Wait for release to avoid retrigger onPress re-entry
+                try {
+                  awaitRelease()
+                } catch (_: Throwable) {}
+              } else {
+                if (dy < 0) {
+                  onUp()
+                  try { awaitRelease() } catch (_: Throwable) {}
+                } else {
+                  // Soft drop hold while pressed
+                  onDownPress(true)
+                  try { awaitRelease() } catch (_: Throwable) {}
+                  onDownPress(false)
+                }
+              }
             }
-          })
+          )
         }
       ) {
         val w = size.width; val h = size.height
@@ -119,7 +134,10 @@ private fun FramedActionButton(label: String, onPress: () -> Unit) {
         .size(62.dp)
         .background(Color(0xFFFF0000), CircleShape)
         .border(1.dp, Color.Black, CircleShape)
-        .pointerInput(Unit) { detectTapGestures(onTap = { onPress() }) }
+        .pointerInput(Unit) { detectTapGestures(onPress = {
+          onPress()
+          try { awaitRelease() } catch (_: Throwable) {}
+        }) }
     ) {
       Text(label, color = Color.White, fontFamily = FontFamily.Monospace, fontSize = 20.sp)
     }

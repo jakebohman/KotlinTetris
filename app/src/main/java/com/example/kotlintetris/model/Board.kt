@@ -39,5 +39,9 @@ class Board(
   }
 
   fun snapshot(): List<TetrominoType?> = cells.toList()
-}
 
+  // Clear all cells to empty (null)
+  fun clear() {
+    for (i in cells.indices) cells[i] = null
+  }
+}

@@ -14,16 +14,14 @@ import com.example.kotlintetris.model.GameState
 
 @Composable
 fun ScoreOverlay(state: GameState, modifier: Modifier = Modifier) {
-  val scoreStr = state.score.coerceAtLeast(0).toString().padStart(6, '0')
   val levelStr = state.level.coerceAtLeast(0).toString().padStart(2, '0')
-  val linesStr = state.lines.coerceAtLeast(0).toString().padStart(3, '0')
   Column(
     modifier = modifier
       .background(Color.Black)
       .padding(horizontal = 6.dp, vertical = 4.dp)
   ) {
-    Text("SCORE  $scoreStr", color = Color.White, fontFamily = FontFamily.Monospace, fontSize = 14.sp)
-    Text("LEVEL  $levelStr", color = Color.White, fontFamily = FontFamily.Monospace, fontSize = 14.sp)
-    Text("LINES  $linesStr", color = Color.White, fontFamily = FontFamily.Monospace, fontSize = 14.sp)
+    Text("SCORE: ${state.score.coerceAtLeast(0)}", color = Color.White, fontFamily = FontFamily.Monospace, fontSize = 14.sp)
+    Text("LEVEL: $levelStr", color = Color.White, fontFamily = FontFamily.Monospace, fontSize = 14.sp)
+    Text("LINES: ${state.lines.coerceAtLeast(0)}", color = Color.White, fontFamily = FontFamily.Monospace, fontSize = 14.sp)
   }
 }

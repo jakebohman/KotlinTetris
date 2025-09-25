@@ -25,7 +25,7 @@ class GameEngine(
       nextQueue = emptyList(),
       score = 0,
       lines = 0,
-      level = 1,
+      level = 0,
       gameOver = false,
       paused = false
     )
@@ -39,25 +39,70 @@ class GameEngine(
   private var canHold = true
   private var score = 0
   private var lines = 0
-  private var level = 1
+  private var level = 0
   private var loopJob: Job? = null
   private var softDrop = false
   private var paused: Boolean = false
 
+  // Lock delay handling (ms)
+  private var lockStartMs: Long? = null
+  private val lockDelayMs: Long = 500
+
   fun start() {
-    repeat(5) { enqueue() }
-    spawn()
+    resetCore()
     loopJob?.cancel()
     loopJob = scope.launch { loop() }
     push()
   }
 
+  fun restart() {
+    start()
+  }
+
+  private fun resetCore() {
+    board.clear()
+    bag = TetrominoType.bag()
+    next.clear()
+    active = null
+    hold = null
+    canHold = true
+    score = 0
+    lines = 0
+    level = 0
+    lockStartMs = null
+    repeat(5) { enqueue() }
+    spawn()
+  }
+
   private suspend fun loop() {
     while (true) {
-      val interval = max(50L, 800L - (level - 1) * 60L)
-      delay(if (softDrop) interval / 8 else interval)
+      val interval = gravityIntervalMs(level)
+      val delayMs = if (softDrop) max(1L, interval / 8L) else interval
+      delay(delayMs)
       if (!paused) tick()
     }
+  }
+
+  private fun gravityIntervalMs(level: Int): Long {
+    val frames = when (level) {
+      0 -> 48
+      1 -> 43
+      2 -> 38
+      3 -> 33
+      4 -> 28
+      5 -> 23
+      6 -> 18
+      7 -> 13
+      8 -> 8
+      9 -> 6
+      in 10..12 -> 5
+      in 13..15 -> 4
+      in 16..18 -> 3
+      in 19..28 -> 2
+      else -> 1
+    }
+    // 60 FPS -> ms per frame is ~16.666; approximate with 1000/60
+    return (frames * (1000.0 / 60.0)).toLong().coerceAtLeast(1)
   }
 
   private fun enqueue() {
@@ -69,8 +114,8 @@ class GameEngine(
     val type = next.removeFirst()
     enqueue()
     val piece = Piece(type, 0, Point(board.width / 2, 0))
-    // Assign first so a final push/gameOver can show the piece that failed to spawn
     active = piece
+    lockStartMs = null
     if (!board.canPlace(piece)) {
       gameOver()
       return
@@ -83,26 +128,50 @@ class GameEngine(
     push(gameOver = true)
   }
 
+  private fun lockAndResolve(falling: Piece) {
+    // If any block is in hidden rows (top 2), it's game over per Swift behavior
+    val hiddenRows = board.height - 20 // 2 when height=22
+    val anyInHidden = falling.cells().any { it.y < hiddenRows }
+    board.lock(falling)
+    val cleared = board.clearLines()
+    if (cleared > 0) {
+      val scoringLevel = level + 1
+      score += when (cleared) {
+        1 -> 40
+        2 -> 100
+        3 -> 300
+        4 -> 1200
+        else -> 0
+      } * scoringLevel
+      lines += cleared
+      level = lines / 10
+    }
+    if (anyInHidden) {
+      push()
+      gameOver()
+      return
+    }
+    spawn()
+    push()
+  }
+
   private fun tick() {
     val falling = active ?: return
     val moved = falling.move(0, 1)
     if (board.canPlace(moved)) {
       active = moved
+      lockStartMs = null // moving down resets lock timer
     } else {
-      board.lock(falling)
-      val cleared = board.clearLines()
-      if (cleared > 0) {
-        score += when (cleared) {
-          1 -> 100
-          2 -> 300
-          3 -> 500
-          4 -> 800
-          else -> 0
-        } * level
-        lines += cleared
-        level = 1 + lines / 10
+      val now = System.currentTimeMillis()
+      if (lockStartMs == null) {
+        lockStartMs = now
+      } else if (now - lockStartMs!! >= lockDelayMs) {
+        // lock and resolve
+        active = falling
+        lockStartMs = null
+        lockAndResolve(falling)
+        return
       }
-      spawn()
     }
     push()
   }
@@ -139,28 +208,46 @@ class GameEngine(
     val moved = a.move(dx,0)
     if (board.canPlace(moved)) {
       active = moved
+      lockStartMs = null // movement resets lock timer
       push()
     }
   }
 
   fun rotate(clockwise: Boolean) {
     val a = active ?: return
-    val r = a.rotate(if (clockwise) 1 else -1)
-    if (board.canPlace(r)) {
-      active = r
-      push()
+    val base = a.rotate(if (clockwise) 1 else -1)
+    val kicks = listOf(
+      Point(0, 0),
+      Point(-1, 0),
+      Point(1, 0),
+      Point(0, -1), // up kick (screen up is y-1)
+      Point(-1, -1),
+      Point(1, -1)
+    )
+    for (k in kicks) {
+      val candidate = base.move(k.x, k.y)
+      if (board.canPlace(candidate)) {
+        active = candidate
+        lockStartMs = null // rotation resets lock timer
+        push()
+        return
+      }
     }
   }
 
   fun hardDrop() {
     val a = active ?: return
     var cur = a
+    var dist = 0
     while (true) {
       val next = cur.move(0,1)
-      if (board.canPlace(next)) cur = next else break
+      if (board.canPlace(next)) { cur = next; dist++ } else break
     }
+    // Add hard drop points like Swift version
+    score += dist * 2
     active = cur
-    tick() // lock
+    lockStartMs = null
+    lockAndResolve(cur)
   }
 
   fun hold() {
@@ -181,6 +268,7 @@ class GameEngine(
       active = swapped
     }
     canHold = false
+    lockStartMs = null
     push()
   }
 

@@ -19,4 +19,5 @@ class GameViewModel : ViewModel() {
   fun hold() = engine.hold()
   fun softDrop(on: Boolean) = engine.setSoftDrop(on)
   fun togglePause() = engine.togglePause()
+  fun restart() = engine.restart()
 }
