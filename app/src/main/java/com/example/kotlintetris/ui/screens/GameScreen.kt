@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -23,7 +24,7 @@ fun GameScreen(vm: GameViewModel = viewModel()) {
   val overlap = 120.dp
 
   Box(Modifier.fillMaxSize().background(Color.Black)) {
-    // Controller background anchored to bottom, behind the game area
+    // Controller background anchored to bottom; restore fixed height
     Box(
       modifier = Modifier
         .fillMaxWidth()
@@ -48,11 +49,12 @@ fun GameScreen(vm: GameViewModel = viewModel()) {
           .background(Color(0xFF66666F))
       )
       // Nintendo branding
-      Box(modifier = Modifier.fillMaxSize().padding(12.dp)) {
+      Box(modifier = Modifier.fillMaxSize().padding(start = 12.dp, top = 12.dp, end = 4.dp)) {
         Text(
           text = "Nintendo",
           color = Color.Red,
           fontFamily = FontFamily.SansSerif,
+          fontWeight = FontWeight.Black,
           fontSize = 18.sp,
           modifier = Modifier.align(Alignment.TopEnd)
         )
@@ -70,6 +72,7 @@ fun GameScreen(vm: GameViewModel = viewModel()) {
       modifier = Modifier
         .fillMaxWidth()
         .align(Alignment.BottomCenter)
+        .offset(y = (-16).dp)
     )
 
     // Game area anchored near bottom, overlapping the top of the D-pad

@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.min
@@ -109,8 +110,12 @@ fun ControllerPanel(
       }
     }
 
-    // A/B buttons panel
-    Row(horizontalArrangement = Arrangement.spacedBy(24.dp), verticalAlignment = Alignment.CenterVertically) {
+    // A/B buttons panel (moved down slightly)
+    Row(
+      horizontalArrangement = Arrangement.spacedBy(24.dp),
+      verticalAlignment = Alignment.CenterVertically,
+      modifier = Modifier.padding(top = 16.dp)
+    ) {
       FramedActionButton(label = "B", onPress = onB)
       FramedActionButton(label = "A", onPress = onA)
     }
@@ -119,27 +124,39 @@ fun ControllerPanel(
 
 @Composable
 private fun FramedActionButton(label: String, onPress: () -> Unit) {
-  // White rounded square frame with thin black border
-  Box(
-    contentAlignment = Alignment.Center,
-    modifier = Modifier
-      .size(84.dp)
-      .background(Color.White, RoundedCornerShape(8.dp))
-      //.border(1.dp, Color.Black, RoundedCornerShape(8.dp))
-  ) {
-    // Red circular button with thin black border
+  // Outer column: square on top, label below aligned to bottom-right of square
+  Column(horizontalAlignment = Alignment.End, modifier = Modifier.width(84.dp)) {
+    // White rounded square frame with thin black border
     Box(
       contentAlignment = Alignment.Center,
       modifier = Modifier
-        .size(62.dp)
-        .background(Color(0xFFFF0000), CircleShape)
-        .border(1.dp, Color.Black, CircleShape)
-        .pointerInput(Unit) { detectTapGestures(onPress = {
-          onPress()
-          try { awaitRelease() } catch (_: Throwable) {}
-        }) }
+        .size(84.dp)
+        .background(Color.White, RoundedCornerShape(8.dp))
+        //.border(1.dp, Color.Black, RoundedCornerShape(8.dp))
     ) {
-      Text(label, color = Color.White, fontFamily = FontFamily.Monospace, fontSize = 20.sp)
+      // Red circular button with thin black border
+      Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+          .size(62.dp)
+          .background(Color(0xFFFF0000), CircleShape)
+          .border(1.dp, Color.Black, CircleShape)
+          .pointerInput(Unit) { detectTapGestures(onPress = {
+            onPress()
+            try { awaitRelease() } catch (_: Throwable) {}
+          }) }
+      ) {
+        // Remove centered letter; letter appears below square instead
+      }
     }
+    // Retro label below square at bottom-right
+    Text(
+      label,
+      color = Color.Red,
+      fontFamily = FontFamily.Monospace, // retro-styled monospace
+      fontWeight = FontWeight.Bold,
+      fontSize = 18.sp,
+      modifier = Modifier.padding(top = 4.dp)
+    )
   }
 }
