@@ -1,41 +1,25 @@
 package com.example.kotlintetris.ui.components
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.example.kotlintetris.model.GameState
 import com.example.kotlintetris.model.Point
 
 @Composable
 fun RetroBoard(state: GameState, modifier: Modifier = Modifier) {
-  val borderColor = Color.White
   val bgColor = Color.Black
   val gridColor = Color(0x33FFFFFF)
   val w = 10
   val h = 20
-  val border: Dp = 4.dp
-  val stroke = with(LocalDensity.current) { border.toPx() }
 
   Canvas(modifier = modifier.aspectRatio(w / h.toFloat())) {
-    // Board rect (full canvas), border and background
+    // Background
     drawRect(color = bgColor, size = size)
-    // inset the stroke fully inside the canvas so it's fully visible
-    val inset = stroke / 2f
-    drawRect(
-      color = borderColor,
-      topLeft = Offset(inset, inset),
-      size = Size(size.width - stroke, size.height - stroke),
-      style = Stroke(width = stroke)
-    )
 
     val cellW = size.width / w
     val cellH = size.height / h

@@ -2,7 +2,6 @@ package com.example.kotlintetris.ui.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -28,7 +27,6 @@ fun NextPreview(next: TetrominoType?, modifier: Modifier = Modifier) {
     horizontalAlignment = Alignment.Start,
     modifier = modifier
       .background(Color.Black)
-      .border(3.dp, Color.White)
       .padding(horizontal = 6.dp, vertical = 4.dp)
   ) {
     Text("NEXT", color = Color.White, fontFamily = FontFamily.Monospace, fontSize = 14.sp)
@@ -37,7 +35,6 @@ fun NextPreview(next: TetrominoType?, modifier: Modifier = Modifier) {
         .width(80.dp)
         .height(80.dp)
         .background(Color.Black)
-        .border(3.dp, Color.White)
         .padding(4.dp)
     ) {
       Canvas(modifier = Modifier.matchParentSize()) {

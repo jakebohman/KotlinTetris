@@ -1,14 +1,11 @@
 package com.example.kotlintetris.ui.screens
 
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kotlintetris.ui.components.*
@@ -18,32 +15,20 @@ import com.example.kotlintetris.ui.viewmodel.GameViewModel
 fun GameScreen(vm: GameViewModel = viewModel()) {
   val state by vm.state.collectAsState()
 
-  Column(Modifier.fillMaxSize().padding(12.dp)) {
-    // Top bar with pause button aligned right
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-      PauseButton(paused = state.paused, onClick = { vm.togglePause() })
-    }
+  val controllerHeight = 240.dp
+  val overlap = 24.dp
 
-    // Center area: board centered and large
+  Box(Modifier.fillMaxSize().background(Color.Black)) {
+    // Gray controller background anchored to bottom, behind the game area
     Box(
       modifier = Modifier
         .fillMaxWidth()
-        .weight(1f),
-      contentAlignment = Alignment.Center
-    ) {
-      Box(Modifier.fillMaxWidth(0.9f)) {
-        RetroBoard(state, modifier = Modifier.fillMaxWidth())
-        // Overlays inside board corners
-        Box(Modifier.align(Alignment.TopStart).padding(4.dp)) {
-          ScoreOverlay(state)
-        }
-        Box(Modifier.align(Alignment.TopEnd).padding(4.dp)) {
-          NextPreview(next = state.nextQueue.firstOrNull())
-        }
-      }
-    }
+        .height(controllerHeight)
+        .align(Alignment.BottomCenter)
+        .background(Color(0xFFEEEEEE))
+    )
 
-    // Controller at bottom
+    // Controller content on top of gray background
     ControllerPanel(
       onLeft = { vm.left() },
       onRight = { vm.right() },
@@ -53,8 +38,26 @@ fun GameScreen(vm: GameViewModel = viewModel()) {
       onB = { vm.hardDrop() },
       modifier = Modifier
         .fillMaxWidth()
-        .height(168.dp)
-        .padding(top = 8.dp)
+        .align(Alignment.BottomCenter)
     )
+
+    // Game area anchored near bottom, overlapping the top of the D-pad
+    Box(
+      modifier = Modifier
+        .fillMaxWidth()
+        .align(Alignment.BottomCenter)
+        .padding(horizontal = 12.dp)
+        .offset(y = -(controllerHeight - overlap)),
+      contentAlignment = Alignment.Center
+    ) {
+      GameArea(state = state, modifier = Modifier.fillMaxWidth(0.9f))
+    }
+
+    // Pause button top-right
+    Box(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
+      Box(modifier = Modifier.align(Alignment.TopEnd)) {
+        PauseButton(paused = state.paused, onClick = { vm.togglePause() })
+      }
+    }
   }
 }

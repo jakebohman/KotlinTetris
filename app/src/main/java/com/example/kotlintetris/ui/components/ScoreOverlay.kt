@@ -1,7 +1,6 @@
 package com.example.kotlintetris.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -21,7 +20,6 @@ fun ScoreOverlay(state: GameState, modifier: Modifier = Modifier) {
   Column(
     modifier = modifier
       .background(Color.Black)
-      .border(3.dp, Color.White)
       .padding(horizontal = 6.dp, vertical = 4.dp)
   ) {
     Text("SCORE  $scoreStr", color = Color.White, fontFamily = FontFamily.Monospace, fontSize = 14.sp)
