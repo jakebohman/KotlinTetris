@@ -32,15 +32,16 @@ fun ScorePanel(state: GameState, modifier: Modifier = Modifier) {
       Text(
         text = "SCORE",
         color = Color.White,
-        fontSize = 12.sp,
+        fontSize = 16.sp, // Increased from 12.sp to match numbers
         fontFamily = FontFamily.Monospace,
         fontWeight = FontWeight.Bold
       )
       Text(
         text = "${state.score}",
-        color = Color.Yellow,
-        fontSize = 12.sp,
-        fontFamily = FontFamily.Monospace
+        color = Color.White,
+        fontSize = 16.sp,
+        fontFamily = FontFamily.Monospace,
+        fontWeight = FontWeight.Bold
       )
     }
 
@@ -52,15 +53,16 @@ fun ScorePanel(state: GameState, modifier: Modifier = Modifier) {
       Text(
         text = "LINES",
         color = Color.White,
-        fontSize = 12.sp,
+        fontSize = 16.sp, // Increased from 12.sp to match numbers
         fontFamily = FontFamily.Monospace,
         fontWeight = FontWeight.Bold
       )
       Text(
         text = "${state.lines}",
-        color = Color.Yellow,
-        fontSize = 12.sp,
-        fontFamily = FontFamily.Monospace
+        color = Color.White,
+        fontSize = 16.sp,
+        fontFamily = FontFamily.Monospace,
+        fontWeight = FontWeight.Bold
       )
     }
 
@@ -72,15 +74,16 @@ fun ScorePanel(state: GameState, modifier: Modifier = Modifier) {
       Text(
         text = "LEVEL",
         color = Color.White,
-        fontSize = 12.sp,
+        fontSize = 16.sp, // Increased from 12.sp to match numbers
         fontFamily = FontFamily.Monospace,
         fontWeight = FontWeight.Bold
       )
       Text(
         text = "${state.level}",
-        color = Color.Yellow,
-        fontSize = 12.sp,
-        fontFamily = FontFamily.Monospace
+        color = Color.White, // Changed from Yellow to White
+        fontSize = 16.sp, // Increased from 12.sp to 16.sp
+        fontFamily = FontFamily.Monospace,
+        fontWeight = FontWeight.Bold // Added bold weight
       )
     }
   }
