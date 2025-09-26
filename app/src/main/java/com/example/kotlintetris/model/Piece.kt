@@ -38,15 +38,15 @@ data class Piece(
       ),
       TetrominoType.S to arrayOf(
         listOf(Point(0,0), Point(1,0), Point(0,1), Point(-1,1)),
-        listOf(Point(0,0), Point(0,1), Point(1,0), Point(1,-1)),
+        listOf(Point(0,0), Point(0,-1), Point(1,0), Point(1,1)),
         listOf(Point(0,0), Point(1,0), Point(0,1), Point(-1,1)),
-        listOf(Point(0,0), Point(0,1), Point(1,0), Point(1,-1))
+        listOf(Point(0,0), Point(0,-1), Point(1,0), Point(1,1))
       ),
       TetrominoType.Z to arrayOf(
         listOf(Point(0,0), Point(-1,0), Point(0,1), Point(1,1)),
-        listOf(Point(0,0), Point(0,-1), Point(1,0), Point(1,1)),
+        listOf(Point(0,0), Point(0,1), Point(1,0), Point(1,-1)),
         listOf(Point(0,0), Point(-1,0), Point(0,1), Point(1,1)),
-        listOf(Point(0,0), Point(0,-1), Point(1,0), Point(1,1))
+        listOf(Point(0,0), Point(0,1), Point(1,0), Point(1,-1))
       ),
       TetrominoType.J to arrayOf(
         listOf(Point(0,0), Point(-1,0), Point(1,0), Point(-1,1)),
