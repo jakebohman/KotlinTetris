@@ -16,6 +16,7 @@ class GameViewModel : ViewModel() {
   fun rotateCW() { if (!state.value.paused) engine.rotate(true) }
   fun rotateCCW() { if (!state.value.paused) engine.rotate(false) }
   fun hardDrop() { if (!state.value.paused) engine.hardDrop() }
+  fun singleSoftDrop() { if (!state.value.paused) engine.singleSoftDrop() }
   fun hold() { if (!state.value.paused) engine.hold() }
   fun softDrop(on: Boolean) { if (!state.value.paused) engine.setSoftDrop(on) }
   fun togglePause() = engine.togglePause()

@@ -302,5 +302,16 @@ class GameEngine(
     push()
   }
 
+  fun singleSoftDrop() {
+    val a = active ?: return
+    val moved = a.move(0, 1)
+    if (board.canPlace(moved)) {
+      active = moved
+      lockStartMs = null // movement resets lock timer
+      score += 1 // Single soft drop gives 1 point
+      push()
+    }
+  }
+
   fun setSoftDrop(enabled: Boolean) { softDrop = enabled }
 }

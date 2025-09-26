@@ -90,7 +90,7 @@ fun GameScreen(vm: GameViewModel = viewModel()) {
         onTap = { vm.rotateCW() },           // Tap anywhere: Rotate clockwise
         onSwipeLeft = { vm.left() },         // Swipe left: Move piece left
         onSwipeRight = { vm.right() },       // Swipe right: Move piece right
-        onSwipeDown = { vm.hardDrop() },     // Swipe down: Hard drop
+        onSwipeDown = { vm.singleSoftDrop() }, // Swipe down: Single soft drop (one row down)
         onSwipeUp = { vm.rotateCW() },       // Swipe up: Rotate piece (alternative)
         onLongPress = { pressed -> vm.softDrop(pressed) } // Long press: Continuous soft drop
       )

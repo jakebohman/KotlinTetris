@@ -27,6 +27,7 @@ fun GameArea(
 ) {
   val hudHeight = 96.dp
   var isLongPressing by remember { mutableStateOf(false) }
+  var hasTriggeredSwipe by remember { mutableStateOf(false) }
 
   Box(
     modifier = modifier
@@ -43,15 +44,18 @@ fun GameArea(
       }
       .pointerInput(Unit) {
         detectDragGestures(
-          onDragStart = { },
+          onDragStart = {
+            hasTriggeredSwipe = false
+          },
           onDragEnd = {
             if (isLongPressing) {
               isLongPressing = false
               onLongPress(false)
             }
+            hasTriggeredSwipe = false
           }
         ) { change, dragAmount ->
-          if (!isLongPressing) {
+          if (!isLongPressing && !hasTriggeredSwipe) {
             val deltaX = dragAmount.x
             val deltaY = dragAmount.y
 
@@ -59,11 +63,13 @@ fun GameArea(
             if (abs(deltaX) > abs(deltaY)) {
               // Horizontal swipe
               if (abs(deltaX) > 10f) { // Minimum swipe distance
+                hasTriggeredSwipe = true
                 if (deltaX > 0) onSwipeRight() else onSwipeLeft()
               }
             } else {
               // Vertical swipe
               if (abs(deltaY) > 10f) { // Minimum swipe distance
+                hasTriggeredSwipe = true
                 if (deltaY > 0) onSwipeDown() else onSwipeUp()
               }
             }
