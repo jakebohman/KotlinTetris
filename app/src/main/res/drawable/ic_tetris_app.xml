@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Background circle -->
+    <path
+        android:fillColor="#1A1A2E"
+        android:pathData="M0,0h108v108h-108z" />
+
+    <!-- Tetris blocks forming a recognizable pattern -->
+    <!-- I-piece (cyan) -->
+    <path
+        android:fillColor="#00F0F0"
+        android:pathData="M20,30h8v8h-8z" />
+    <path
+        android:fillColor="#00F0F0"
+        android:pathData="M20,38h8v8h-8z" />
+    <path
+        android:fillColor="#00F0F0"
+        android:pathData="M20,46h8v8h-8z" />
+    <path
+        android:fillColor="#00F0F0"
+        android:pathData="M20,54h8v8h-8z" />
+
+    <!-- O-piece (yellow) -->
+    <path
+        android:fillColor="#F0F000"
+        android:pathData="M35,35h8v8h-8z" />
+    <path
+        android:fillColor="#F0F000"
+        android:pathData="M43,35h8v8h-8z" />
+    <path
+        android:fillColor="#F0F000"
+        android:pathData="M35,43h8v8h-8z" />
+    <path
+        android:fillColor="#F0F000"
+        android:pathData="M43,43h8v8h-8z" />
+
+    <!-- T-piece (purple) -->
+    <path
+        android:fillColor="#A000F0"
+        android:pathData="M60,35h8v8h-8z" />
+    <path
+        android:fillColor="#A000F0"
+        android:pathData="M52,43h8v8h-8z" />
+    <path
+        android:fillColor="#A000F0"
+        android:pathData="M60,43h8v8h-8z" />
+    <path
+        android:fillColor="#A000F0"
+        android:pathData="M68,43h8v8h-8z" />
+
+    <!-- L-piece (orange) -->
+    <path
+        android:fillColor="#F0A000"
+        android:pathData="M80,30h8v8h-8z" />
+    <path
+        android:fillColor="#F0A000"
+        android:pathData="M80,38h8v8h-8z" />
+    <path
+        android:fillColor="#F0A000"
+        android:pathData="M80,46h8v8h-8z" />
+    <path
+        android:fillColor="#F0A000"
+        android:pathData="M88,46h8v8h-8z" />
+
+    <!-- S-piece (green) -->
+    <path
+        android:fillColor="#00F000"
+        android:pathData="M35,60h8v8h-8z" />
+    <path
+        android:fillColor="#00F000"
+        android:pathData="M43,60h8v8h-8z" />
+    <path
+        android:fillColor="#00F000"
+        android:pathData="M43,68h8v8h-8z" />
+    <path
+        android:fillColor="#00F000"
+        android:pathData="M51,68h8v8h-8z" />
+
+    <!-- Z-piece (red) -->
+    <path
+        android:fillColor="#F00000"
+        android:pathData="M60,60h8v8h-8z" />
+    <path
+        android:fillColor="#F00000"
+        android:pathData="M68,60h8v8h-8z" />
+    <path
+        android:fillColor="#F00000"
+        android:pathData="M52,68h8v8h-8z" />
+    <path
+        android:fillColor="#F00000"
+        android:pathData="M60,68h8v8h-8z" />
+
+</vector>
+

@@ -17,7 +17,7 @@ import com.example.kotlintetris.ui.components.*
 import com.example.kotlintetris.ui.viewmodel.GameViewModel
 
 @Composable
-fun GameScreen(vm: GameViewModel = viewModel()) {
+fun GameScreen(vm: GameViewModel = viewModel(), onReturnToMenu: () -> Unit = {}) {
   val state by vm.state.collectAsState()
 
   val controllerHeight = 220.dp
@@ -111,16 +111,45 @@ fun GameScreen(vm: GameViewModel = viewModel()) {
       Box(
         modifier = Modifier
           .fillMaxSize()
-          .background(Color(0xAA000000))
-          .clickable { vm.restart() },
+          .background(Color(0xAA000000)),
         contentAlignment = Alignment.Center
       ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-          Text("GAME OVER", color = Color.Red, fontSize = 36.sp, fontFamily = FontFamily.SansSerif)
+          Text("GAME OVER", color = Color.Red, fontSize = 36.sp, fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Bold)
           Spacer(Modifier.height(8.dp))
           Text("FINAL SCORE: ${state.score}", color = Color.White, fontSize = 20.sp, fontFamily = FontFamily.SansSerif)
           Spacer(Modifier.height(16.dp))
-          Text("TAP TO RESTART", color = Color.Yellow, fontSize = 18.sp, fontFamily = FontFamily.SansSerif)
+          Text("LINES CLEARED: ${state.lines}", color = Color.White, fontSize = 16.sp, fontFamily = FontFamily.SansSerif)
+          Spacer(Modifier.height(16.dp))
+          Text("LEVEL REACHED: ${state.level}", color = Color.White, fontSize = 16.sp, fontFamily = FontFamily.SansSerif)
+
+          Spacer(Modifier.height(32.dp))
+
+          // Restart button
+          Box(
+            modifier = Modifier
+              .width(200.dp)
+              .height(48.dp)
+              .background(Color(0xFF4CAF50), shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
+              .clickable { vm.restart() },
+            contentAlignment = Alignment.Center
+          ) {
+            Text("PLAY AGAIN", color = Color.White, fontSize = 18.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+          }
+
+          Spacer(Modifier.height(16.dp))
+
+          // Return to menu button
+          Box(
+            modifier = Modifier
+              .width(200.dp)
+              .height(48.dp)
+              .background(Color(0xFF2196F3), shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
+              .clickable { onReturnToMenu() },
+            contentAlignment = Alignment.Center
+          ) {
+            Text("MAIN MENU", color = Color.White, fontSize = 18.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+          }
         }
       }
     }
