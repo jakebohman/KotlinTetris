@@ -72,18 +72,40 @@ fun GameArea(
       }
   ) {
     Column(Modifier.fillMaxWidth()) {
+      // HUD with Score on left and Next piece on right
       Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.End,
+        modifier = Modifier.fillMaxWidth().height(hudHeight),
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Top
       ) {
-        // Next box aligned to the right edge
-        Box(Modifier.height(hudHeight).width(116.dp), contentAlignment = Alignment.TopStart) {
+        // Score panel on the left - takes remaining space
+        Box(
+          modifier = Modifier.weight(1f).height(hudHeight),
+          contentAlignment = Alignment.TopStart
+        ) {
+          ScorePanel(state = state, modifier = Modifier.fillMaxSize())
+        }
+
+        // White vertical divider line
+        Box(
+          modifier = Modifier
+            .width(2.dp)
+            .height(hudHeight)
+            .background(Color.White)
+        )
+
+        // Next box on the right - square shape
+        Box(
+          modifier = Modifier.width(hudHeight).height(hudHeight), // Square: width = height
+          contentAlignment = Alignment.TopEnd
+        ) {
           NextPreview(next = state.nextQueue.firstOrNull(), modifier = Modifier.fillMaxSize())
         }
       }
+
       // Horizontal divider between HUD and board
       Box(Modifier.fillMaxWidth().height(4.dp).background(Color(0xFFF5F5DC)))
+
       // Board below the HUD; keep 10:20 aspect
       RetroBoard(state = state, modifier = Modifier.fillMaxWidth().aspectRatio(10f / 20f))
     }
