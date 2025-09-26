@@ -1,6 +1,6 @@
 # SwiftTetris
 
-A (somewhat) faithful Android recreation of classic NES Tetris built in Kotlin. I also created an [iOS version of this app](https://github.com/jakebohman) using Swift.
+A (somewhat) faithful Android recreation of classic NES Tetris built in Kotlin. I also created an [iOS version of this app](https://github.com/jakebohman/SwiftTetris) using Swift.
 
 <img width="324" height="715" alt="KotlinTetrisCapture" src="https://github.com/user-attachments/assets/4aba4568-9f88-4005-afc2-4fd5652504ee" />
 
