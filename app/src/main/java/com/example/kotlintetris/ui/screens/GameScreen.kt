@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -16,8 +17,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kotlintetris.ui.components.*
 import com.example.kotlintetris.ui.viewmodel.GameViewModel
 
+/*
+ * Main game screen composable, integrating game area, controller panel, pause button, and game over overlay.
+ * Interacts with GameViewModel to manage game state and user inputs.
+ */
 @Composable
-fun GameScreen(vm: GameViewModel = viewModel(), onReturnToMenu: () -> Unit = {}) {
+fun GameScreen(onReturnToMenu: () -> Unit = {}) {
+  val context = LocalContext.current
+  val vm: GameViewModel = viewModel { GameViewModel(context) }
   val state by vm.state.collectAsState()
 
   val controllerHeight = 220.dp
@@ -118,10 +125,18 @@ fun GameScreen(vm: GameViewModel = viewModel(), onReturnToMenu: () -> Unit = {})
           Text("GAME OVER", color = Color.Red, fontSize = 36.sp, fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Bold)
           Spacer(Modifier.height(8.dp))
           Text("FINAL SCORE: ${state.score}", color = Color.White, fontSize = 20.sp, fontFamily = FontFamily.SansSerif)
+          Spacer(Modifier.height(8.dp))
+          Text("HIGH SCORE: ${state.highScore}", color = Color.Yellow, fontSize = 18.sp, fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Bold)
           Spacer(Modifier.height(16.dp))
           Text("LINES CLEARED: ${state.lines}", color = Color.White, fontSize = 16.sp, fontFamily = FontFamily.SansSerif)
-          Spacer(Modifier.height(16.dp))
+          Spacer(Modifier.height(8.dp))
           Text("LEVEL REACHED: ${state.level}", color = Color.White, fontSize = 16.sp, fontFamily = FontFamily.SansSerif)
+
+          // Show "NEW HIGH SCORE!" if current score equals high score
+          if (state.score == state.highScore && state.score > 0) {
+            Spacer(Modifier.height(16.dp))
+            Text("NEW HIGH SCORE!", color = Color.Green, fontSize = 18.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+          }
 
           Spacer(Modifier.height(32.dp))
 

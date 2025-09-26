@@ -5,6 +5,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.example.kotlintetris.model.GameState
 
+/*
+ * View to display the held Tetrimino
+ */
 @Composable
 fun HoldView(state: GameState) {
   Column {

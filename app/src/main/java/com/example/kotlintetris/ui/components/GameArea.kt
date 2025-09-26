@@ -14,6 +14,12 @@ import androidx.compose.ui.unit.dp
 import com.example.kotlintetris.model.GameState
 import kotlin.math.abs
 
+/*
+ GameArea composable that includes:
+    - HUD at the top with ScorePanel on the left and NextPreview on the right
+    - RetroBoard below the HUD with a 10:20 aspect ratio
+    - Handles tap, swipe (left, right, down, up), and long-press gestures
+ */
 @Composable
 fun GameArea(
   state: GameState,
@@ -30,6 +36,7 @@ fun GameArea(
   var hasTriggeredSwipe by remember { mutableStateOf(false) }
 
   Box(
+    // Container with border and black background
     modifier = modifier
       .border(1.dp, Color(0xFFF5F5DC))
       .background(Color.Black)

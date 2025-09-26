@@ -12,6 +12,9 @@ import com.example.kotlintetris.model.GameState
 import com.example.kotlintetris.model.Point
 import kotlin.math.floor
 
+/*
+ * Retro-styled Tetris board rendering.
+ */
 @Composable
 fun RetroBoard(state: GameState, modifier: Modifier = Modifier) {
   val bgColor = Color(0xFF111111) // fully opaque dark grey background
@@ -35,8 +38,10 @@ fun RetroBoard(state: GameState, modifier: Modifier = Modifier) {
     // Visible window maps to bottom 20 rows of the model board
     val visibleStart = state.height - h
 
+    // Calculate top-left pixel of a cell
     fun cellTopLeft(x: Int, y: Int): Offset = Offset(offsetX + x * cellW, offsetY + y * cellH)
 
+    // Blend two colors by t (0.0-1.0)
     fun blend(c1: Color, c2: Color, t: Float): Color = Color(
       red = c1.red + (c2.red - c1.red) * t,
       green = c1.green + (c2.green - c1.green) * t,
@@ -44,6 +49,7 @@ fun RetroBoard(state: GameState, modifier: Modifier = Modifier) {
       alpha = c1.alpha // keep original alpha
     )
 
+    // Draw a block with 3D effect
     fun drawBlock3D(x: Int, y: Int, colorLong: Long, alpha: Float = 1f) {
       if (x !in 0 until w || y !in 0 until h) return
       val baseColor = Color(colorLong).copy(alpha = alpha)
@@ -81,6 +87,7 @@ fun RetroBoard(state: GameState, modifier: Modifier = Modifier) {
       )
     }
 
+    // Draw a flashing block (for cleared rows)
     fun drawFlashingBlock(x: Int, y: Int) {
       if (x !in 0 until w || y !in 0 until h) return
       val topLeft = cellTopLeft(x, y)
@@ -91,6 +98,7 @@ fun RetroBoard(state: GameState, modifier: Modifier = Modifier) {
       )
     }
 
+    // Check if a board Y coordinate is in the flashing rows
     fun isInFlashingRow(boardY: Int): Boolean {
       return boardY in state.flashingRows
     }

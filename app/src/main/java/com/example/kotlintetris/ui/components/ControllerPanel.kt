@@ -23,6 +23,9 @@ import androidx.compose.ui.unit.sp
 import kotlin.math.min
 import kotlin.math.sqrt
 
+/*
+ * ControllerPanel: D-pad on left, A/B buttons on right
+ */
 @Composable
 fun ControllerPanel(
   onLeft: () -> Unit,
@@ -122,6 +125,11 @@ fun ControllerPanel(
   }
 }
 
+/*
+ * FramedActionButton: Cream rounded square frame with red circular button inside
+ * and retro-styled label below aligned to bottom-right of square.
+ * onPress lambda called when button is pressed.
+ */
 @Composable
 private fun FramedActionButton(label: String, onPress: () -> Unit) {
   // Outer column: square on top, label below aligned to bottom-right of square

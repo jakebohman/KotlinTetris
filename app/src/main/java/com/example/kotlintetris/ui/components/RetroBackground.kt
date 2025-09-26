@@ -10,6 +10,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import kotlin.math.floor
 
+/*
+   RetroBackground is a composable that draws a retro-style background
+   with a dark theme, grid pattern, and scattered tetromino shapes.
+ */
 @Composable
 fun RetroBackground(modifier: Modifier = Modifier) {
   Canvas(modifier = modifier.fillMaxSize()) {

@@ -17,6 +17,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 
+/*
+ * A loading screen with animated falling tetromino pieces and a loading bar.
+ */
 @Composable
 fun LoadingScreen(
   onLoadingComplete: () -> Unit,
@@ -45,6 +48,7 @@ fun LoadingScreen(
     onLoadingComplete()
   }
 
+  // Main container
   Box(
     modifier = modifier
       .fillMaxSize()
@@ -110,6 +114,7 @@ fun LoadingScreen(
   }
 }
 
+// Draw falling tetromino pieces
 private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawFallingTetrominoes(animatedY: Float) {
   val blockSize = 24f
   val colors = listOf(

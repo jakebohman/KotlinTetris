@@ -14,17 +14,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.kotlintetris.ui.components.RetroBackground
+import com.example.kotlintetris.data.HighScoreManager
 
+/*
+ * Main Menu Screen for the Tetris game.
+ */
 @Composable
 fun MainMenuScreen(
   onPlayGame: () -> Unit,
   modifier: Modifier = Modifier
 ) {
+  val context = LocalContext.current
+  val highScoreManager = remember { HighScoreManager(context) }
+  val highScore by remember { mutableStateOf(highScoreManager.getHighScore()) }
+
   Box(
     modifier = modifier.fillMaxSize(),
     contentAlignment = Alignment.Center
@@ -54,6 +63,17 @@ fun MainMenuScreen(
         color = Color(0xFF888888),
         fontSize = 18.sp,
         fontFamily = FontFamily.Monospace
+      )
+
+      Spacer(modifier = Modifier.height(16.dp))
+
+      // High Score display
+      Text(
+        text = "HIGH SCORE: $highScore",
+        color = Color.Yellow,
+        fontSize = 20.sp,
+        fontFamily = FontFamily.Monospace,
+        fontWeight = FontWeight.Bold
       )
 
       Spacer(modifier = Modifier.height(64.dp))

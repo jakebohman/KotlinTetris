@@ -12,6 +12,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.kotlintetris.model.GameState
 
+/*
+ * Overlay showing the current score, level, and lines cleared.
+ */
 @Composable
 fun ScoreOverlay(state: GameState, modifier: Modifier = Modifier) {
   val levelStr = state.level.coerceAtLeast(0).toString().padStart(2, '0')

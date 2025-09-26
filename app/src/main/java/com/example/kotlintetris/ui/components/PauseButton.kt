@@ -10,6 +10,9 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+/*
+ * A button that toggles between play and pause states.
+ */
 @Composable
 fun PauseButton(paused: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
   val yellow = Color(0xFFFFFF00)

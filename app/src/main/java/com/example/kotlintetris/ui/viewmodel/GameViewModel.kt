@@ -1,12 +1,15 @@
 package com.example.kotlintetris.ui.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kotlintetris.logic.GameEngine
+import com.example.kotlintetris.data.HighScoreManager
 import kotlinx.coroutines.flow.StateFlow
 
-class GameViewModel : ViewModel() {
-  private val engine = GameEngine(viewModelScope)
+class GameViewModel(context: Context) : ViewModel() {
+  private val highScoreManager = HighScoreManager(context)
+  private val engine = GameEngine(viewModelScope, highScoreManager)
   val state: StateFlow<com.example.kotlintetris.model.GameState> = engine.state
 
   init { engine.start() }

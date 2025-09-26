@@ -1,6 +1,7 @@
 package com.example.kotlintetris.logic
 
 import com.example.kotlintetris.model.*
+import com.example.kotlintetris.data.HighScoreManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -9,8 +10,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
+/*
+    Core game engine managing game state, piece movement, gravity,
+    line clears, scoring, and levels. Uses a coroutine to run the
+    main game loop with gravity ticks. Game state via StateFlow for
+    UI to observe and render.
+ */
 class GameEngine(
-  private val scope: CoroutineScope
+  private val scope: CoroutineScope,
+  private val highScoreManager: HighScoreManager
 ) {
   private val board = Board()
   private val _state = MutableStateFlow(
@@ -27,13 +35,14 @@ class GameEngine(
       lines = 0,
       level = 0,
       gameOver = false,
-      paused = false
+      paused = false,
+      highScore = highScoreManager.getHighScore()
     )
   )
   val state: StateFlow<GameState> = _state
 
-  private var bag: MutableList<TetrominoType> = TetrominoType.bag()
-  private val next: ArrayDeque<TetrominoType> = ArrayDeque()
+  private var bag: MutableList<TetrominoType> = TetrominoType.bag() // current bag of pieces
+  private val next: ArrayDeque<TetrominoType> = ArrayDeque() // next queue
   private var active: Piece? = null
   private var hold: TetrominoType? = null
   private var canHold = true
@@ -48,6 +57,7 @@ class GameEngine(
   private var lockStartMs: Long? = null
   private val lockDelayMs: Long = 500
 
+  // Start the game
   fun start() {
     resetCore()
     loopJob?.cancel()
@@ -55,10 +65,12 @@ class GameEngine(
     push()
   }
 
+  // Restart the game
   fun restart() {
     start()
   }
 
+  // Reset core game state without touching high score or coroutine
   private fun resetCore() {
     board.clear()
     bag = TetrominoType.bag()
@@ -74,6 +86,7 @@ class GameEngine(
     spawn()
   }
 
+  // Main game loop handling gravity and ticks
   private suspend fun loop() {
     while (true) {
       val interval = gravityIntervalMs(level)
@@ -83,6 +96,7 @@ class GameEngine(
     }
   }
 
+  // Gravity interval in ms based on level, approximating NES/SNES timings
   private fun gravityIntervalMs(level: Int): Long {
     val frames = when (level) {
       0 -> 48
@@ -105,11 +119,13 @@ class GameEngine(
     return (frames * (1000.0 / 60.0)).toLong().coerceAtLeast(1)
   }
 
+  // Add next piece to the queue from the bag, refilling bag if empty
   private fun enqueue() {
     if (bag.isEmpty()) bag = TetrominoType.bag()
     next.addLast(bag.removeAt(0))
   }
 
+  // Spawn the next piece from the queue
   private fun spawn() {
     val type = next.removeAt(0)
     enqueue()
@@ -123,11 +139,15 @@ class GameEngine(
     canHold = true
   }
 
+  // Handle game over state
   private fun gameOver() {
+    // Update high score if current score is higher
+    highScoreManager.updateHighScore(score)
     loopJob?.cancel()
     push(gameOver = true)
   }
 
+  // Lock the piece and resolve any line clears, then spawn next piece
   private fun lockAndResolve(falling: Piece) {
     // If any block is in hidden rows (top 2), it's game over per Swift behavior
     val hiddenRows = board.height - 20 // 2 when height=22
@@ -179,6 +199,7 @@ class GameEngine(
     }
   }
 
+  // Single game tick: move piece down or lock if it can't move
   private fun tick() {
     val falling = active ?: return
     val moved = falling.move(0, 1)
@@ -200,6 +221,7 @@ class GameEngine(
     push()
   }
 
+  // Compute ghost piece position based on current active piece
   private fun computeGhost(piece: Piece?): List<Point> {
     var cur = piece ?: return emptyList()
     while (true) {
@@ -209,6 +231,7 @@ class GameEngine(
     return cur.cells()
   }
 
+  // Push current game state to StateFlow
   private fun push(gameOver: Boolean = false, customState: GameState? = null) {
     _state.value = customState ?: GameState(
       board = board.snapshot(),
@@ -224,10 +247,12 @@ class GameEngine(
       level = level,
       gameOver = gameOver,
       paused = paused,
-      flashingRows = emptySet()
+      flashingRows = emptySet(),
+      highScore = highScoreManager.getHighScore()
     )
   }
 
+  // Move the piece left or right
   fun move(dx: Int) {
     val a = active ?: return
     val moved = a.move(dx,0)
@@ -238,6 +263,7 @@ class GameEngine(
     }
   }
 
+  // Rotate the piece, with basic wall kicks
   fun rotate(clockwise: Boolean) {
     val a = active ?: return
     val base = a.rotate(if (clockwise) 1 else -1)
@@ -260,6 +286,7 @@ class GameEngine(
     }
   }
 
+  // Instantly drop the piece to the lowest valid position
   fun hardDrop() {
     val a = active ?: return
     var cur = a
@@ -275,6 +302,7 @@ class GameEngine(
     lockAndResolve(cur)
   }
 
+  // Hold current piece, swapping with held piece if any
   fun hold() {
     if (!canHold) return
     val current = active ?: return
@@ -297,11 +325,13 @@ class GameEngine(
     push()
   }
 
+  // Pause or unpause the game
   fun togglePause() {
     paused = !paused
     push()
   }
 
+  // Single soft drop step, called repeatedly when soft drop is enabled
   fun singleSoftDrop() {
     val a = active ?: return
     val moved = a.move(0, 1)
@@ -313,5 +343,6 @@ class GameEngine(
     }
   }
 
+  // Enable or disable continuous soft drop
   fun setSoftDrop(enabled: Boolean) { softDrop = enabled }
 }

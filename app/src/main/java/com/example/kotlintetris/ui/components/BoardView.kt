@@ -10,10 +10,15 @@ import com.example.kotlintetris.model.GameState
 import com.example.kotlintetris.model.Point
 import com.example.kotlintetris.model.TetrominoType
 
+/*
+ * A composable that draws the Tetris board based on the game state.
+ */
 @Composable
 fun BoardView(state: GameState, modifier: Modifier = Modifier) {
   val w = state.width
   val h = state.height
+
+  // Draw the board using a Canvas
   Canvas(modifier = modifier.aspectRatio(w / h.toFloat())) {
     val cw = size.width / w
     val ch = size.height / h

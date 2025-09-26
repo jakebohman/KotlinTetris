@@ -16,6 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.kotlintetris.model.GameState
 
+/*
+ * A panel that displays the current score, lines cleared, level, and high score.
+ */
 @Composable
 fun ScorePanel(state: GameState, modifier: Modifier = Modifier) {
   Column(
@@ -84,6 +87,27 @@ fun ScorePanel(state: GameState, modifier: Modifier = Modifier) {
         fontSize = 16.sp, // Increased from 12.sp to 16.sp
         fontFamily = FontFamily.Monospace,
         fontWeight = FontWeight.Bold // Added bold weight
+      )
+    }
+
+    // High score label and value on same line
+    Row(
+      horizontalArrangement = Arrangement.SpaceBetween,
+      modifier = Modifier.fillMaxWidth()
+    ) {
+      Text(
+        text = "HIGH",
+        color = Color.White,
+        fontSize = 16.sp,
+        fontFamily = FontFamily.Monospace,
+        fontWeight = FontWeight.Bold
+      )
+      Text(
+        text = "${state.highScore}",
+        color = Color.White,
+        fontSize = 16.sp,
+        fontFamily = FontFamily.Monospace,
+        fontWeight = FontWeight.Bold
       )
     }
   }

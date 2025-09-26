@@ -23,6 +23,9 @@ import com.example.kotlintetris.model.Piece
 import com.example.kotlintetris.model.Point
 import com.example.kotlintetris.model.TetrominoType
 
+/*
+ * A composable that shows the next tetromino piece.
+ */
 @Composable
 fun NextPreview(next: TetrominoType?, modifier: Modifier = Modifier) {
   Column(

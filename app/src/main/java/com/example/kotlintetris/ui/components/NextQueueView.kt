@@ -7,6 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.kotlintetris.model.GameState
 
+/*
+ * View to display the next pieces in the queue.
+ */
 @Composable
 fun NextQueueView(state: GameState) {
   Column {
