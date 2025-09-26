@@ -2,6 +2,8 @@
 
 A (somewhat) faithful Android recreation of classic NES Tetris built in Kotlin. I also created an [iOS version of this app](https://github.com/jakebohman) using Swift.
 
+<img width="324" height="715" alt="KotlinTetrisCapture" src="https://github.com/user-attachments/assets/4aba4568-9f88-4005-afc2-4fd5652504ee" />
+
 ## Features
 
 The game recreates the authentic NES Tetris experience with accurate scoring, level progression, and gameplay mechanics. Players can control pieces using touch controls that mimic the original NES controller, complete with a realistic D-pad and A/B buttons.
