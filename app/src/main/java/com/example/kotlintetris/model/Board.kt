@@ -22,6 +22,12 @@ class Board(
     piece.cells().forEach { set(it.x, it.y, piece.type) }
   }
 
+  fun getFullRows(): List<Int> {
+    return (0 until height).filter { y ->
+      (0 until width).all { x -> this[x, y] != null }
+    }
+  }
+
   fun clearLines(): Int {
     val fullRows = (0 until height).filter { y ->
       (0 until width).all { x -> this[x, y] != null }

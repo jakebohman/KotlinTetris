@@ -81,20 +81,36 @@ fun RetroBoard(state: GameState, modifier: Modifier = Modifier) {
       )
     }
 
-    // Placed blocks with 3D effect
+    fun drawFlashingBlock(x: Int, y: Int) {
+      if (x !in 0 until w || y !in 0 until h) return
+      val topLeft = cellTopLeft(x, y)
+      drawRect(
+        color = Color.White,
+        topLeft = topLeft,
+        size = Size(cellW, cellH)
+      )
+    }
+
+    fun isInFlashingRow(boardY: Int): Boolean {
+      return boardY in state.flashingRows
+    }
+
+    // Placed blocks with 3D effect - only render if not in flashing row
     state.board.forEachIndexed { index, t ->
       t?.let {
         val bx = index % state.width
         val by = index / state.width
         val vy = by - visibleStart
-        if (vy in 0 until h) drawBlock3D(bx, vy, it.color)
+        if (vy in 0 until h && !isInFlashingRow(by)) {
+          drawBlock3D(bx, vy, it.color)
+        }
       }
     }
 
-    // Ghost (kept simple and semi-transparent)
+    // Ghost (kept simple and semi-transparent) - only render if not in flashing row
     state.ghost.forEach { p: Point ->
       val vy = p.y - visibleStart
-      if (p.x in 0 until w && vy in 0 until h) {
+      if (p.x in 0 until w && vy in 0 until h && !isInFlashingRow(p.y)) {
         val tl = cellTopLeft(p.x, vy)
         drawRect(
           color = Color.White.copy(alpha = 0.25f),
@@ -104,13 +120,25 @@ fun RetroBoard(state: GameState, modifier: Modifier = Modifier) {
       }
     }
 
-    // Active (falling) piece with 3D effect
+    // Active (falling) piece with 3D effect - only render if not in flashing row
     val activeCells = state.active?.cells()
     val activeColor = state.active?.type?.color
     if (activeCells != null && activeColor != null) {
       activeCells.forEach { p ->
         val vy = p.y - visibleStart
-        if (p.x in 0 until w && vy in 0 until h) drawBlock3D(p.x, vy, activeColor)
+        if (p.x in 0 until w && vy in 0 until h && !isInFlashingRow(p.y)) {
+          drawBlock3D(p.x, vy, activeColor)
+        }
+      }
+    }
+
+    // Draw ALL flashing blocks last - override everything else
+    for (flashingRow in state.flashingRows) {
+      val vy = flashingRow - visibleStart
+      if (vy in 0 until h) {
+        for (x in 0 until w) {
+          drawFlashingBlock(x, vy)
+        }
       }
     }
 

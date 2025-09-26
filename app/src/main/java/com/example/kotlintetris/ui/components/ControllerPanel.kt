@@ -116,8 +116,8 @@ fun ControllerPanel(
       verticalAlignment = Alignment.CenterVertically,
       modifier = Modifier.padding(top = 64.dp)
     ) {
-      FramedActionButton(label = "A", onPress = onA)
       FramedActionButton(label = "B", onPress = onB)
+      FramedActionButton(label = "A", onPress = onA)
     }
   }
 }
@@ -131,7 +131,7 @@ private fun FramedActionButton(label: String, onPress: () -> Unit) {
       contentAlignment = Alignment.Center,
       modifier = Modifier
         .size(84.dp)
-        .background(Color(0xFFF5F5DC), RoundedCornerShape(8.dp))
+        .background(Color(0xF5E7D5CC), RoundedCornerShape(8.dp))
         //.border(1.dp, Color.Black, RoundedCornerShape(8.dp))
     ) {
       // Red circular button with thin black border
@@ -139,7 +139,7 @@ private fun FramedActionButton(label: String, onPress: () -> Unit) {
         contentAlignment = Alignment.Center,
         modifier = Modifier
           .size(62.dp)
-          .background(Color(0xFFFF0000), CircleShape)
+          .background(Color(0xFFF44336), CircleShape)
           .border(1.dp, Color.Black, CircleShape)
           .pointerInput(Unit) { detectTapGestures(onPress = {
             onPress()

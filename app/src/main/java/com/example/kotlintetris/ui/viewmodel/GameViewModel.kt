@@ -11,13 +11,13 @@ class GameViewModel : ViewModel() {
 
   init { engine.start() }
 
-  fun left() = engine.move(-1)
-  fun right() = engine.move(1)
-  fun rotateCW() = engine.rotate(true)
-  fun rotateCCW() = engine.rotate(false)
-  fun hardDrop() = engine.hardDrop()
-  fun hold() = engine.hold()
-  fun softDrop(on: Boolean) = engine.setSoftDrop(on)
+  fun left() { if (!state.value.paused) engine.move(-1) }
+  fun right() { if (!state.value.paused) engine.move(1) }
+  fun rotateCW() { if (!state.value.paused) engine.rotate(true) }
+  fun rotateCCW() { if (!state.value.paused) engine.rotate(false) }
+  fun hardDrop() { if (!state.value.paused) engine.hardDrop() }
+  fun hold() { if (!state.value.paused) engine.hold() }
+  fun softDrop(on: Boolean) { if (!state.value.paused) engine.setSoftDrop(on) }
   fun togglePause() = engine.togglePause()
   fun restart() = engine.restart()
 }

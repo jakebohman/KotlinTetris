@@ -13,5 +13,6 @@ data class GameState(
   val lines: Int,
   val level: Int,
   val gameOver: Boolean,
-  val paused: Boolean
+  val paused: Boolean,
+  val flashingRows: Set<Int> = emptySet()
 )

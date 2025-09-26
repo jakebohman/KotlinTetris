@@ -107,11 +107,11 @@ class GameEngine(
 
   private fun enqueue() {
     if (bag.isEmpty()) bag = TetrominoType.bag()
-    next.addLast(bag.removeFirst())
+    next.addLast(bag.removeAt(0))
   }
 
   private fun spawn() {
-    val type = next.removeFirst()
+    val type = next.removeAt(0)
     enqueue()
     val piece = Piece(type, 0, Point(board.width / 2, 0))
     active = piece
@@ -132,27 +132,51 @@ class GameEngine(
     // If any block is in hidden rows (top 2), it's game over per Swift behavior
     val hiddenRows = board.height - 20 // 2 when height=22
     val anyInHidden = falling.cells().any { it.y < hiddenRows }
+
+    // Lock the piece to the board
     board.lock(falling)
-    val cleared = board.clearLines()
-    if (cleared > 0) {
-      val scoringLevel = level + 1
-      score += when (cleared) {
-        1 -> 40
-        2 -> 100
-        3 -> 300
-        4 -> 1200
-        else -> 0
-      } * scoringLevel
-      lines += cleared
-      level = lines / 10
-    }
-    if (anyInHidden) {
+
+    // Check for full rows, including the cells of the locked piece
+    val fullRows = board.getFullRows()
+    if (fullRows.isNotEmpty()) {
+      // Debug: Print flashing rows
+      println("DEBUG: Flashing rows: $fullRows")
+
+      // Start flashing animation
+      push(customState = state.value.copy(
+        flashingRows = fullRows.toSet(),
+        active = null // Clear active piece to avoid rendering over flashing rows
+      ))
+
+      // Schedule line clearing after flash duration
+      scope.launch {
+        delay(300) // Flash for 300ms
+        val cleared = board.clearLines()
+        if (cleared > 0) {
+          val scoringLevel = level + 1
+          score += when (cleared) {
+            1 -> 40
+            2 -> 100
+            3 -> 300
+            4 -> 1200
+            else -> 0
+          } * scoringLevel
+          lines += cleared
+          level = lines / 10
+        }
+        spawn() // Spawn next piece after clearing lines
+        push(customState = state.value.copy(flashingRows = emptySet())) // Explicitly clear flashing rows
+      }
+    } else {
+      // No lines to clear, spawn next piece immediately
+      if (anyInHidden) {
+        push()
+        gameOver()
+        return
+      }
+      spawn()
       push()
-      gameOver()
-      return
     }
-    spawn()
-    push()
   }
 
   private fun tick() {
@@ -185,8 +209,8 @@ class GameEngine(
     return cur.cells()
   }
 
-  private fun push(gameOver: Boolean = false) {
-    _state.value = GameState(
+  private fun push(gameOver: Boolean = false, customState: GameState? = null) {
+    _state.value = customState ?: GameState(
       board = board.snapshot(),
       width = board.width,
       height = board.height,
@@ -199,7 +223,8 @@ class GameEngine(
       lines = lines,
       level = level,
       gameOver = gameOver,
-      paused = paused
+      paused = paused,
+      flashingRows = emptySet()
     )
   }
 

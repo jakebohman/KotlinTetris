@@ -8,12 +8,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import com.example.kotlintetris.model.GameState
-import kotlinx.coroutines.delay
 import kotlin.math.abs
 
 @Composable
@@ -76,17 +74,11 @@ fun GameArea(
     Column(Modifier.fillMaxWidth()) {
       Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start,
+        horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.Top
       ) {
-        // Score fills left side
-        Box(Modifier.height(hudHeight).weight(1f)) {
-          ScoreOverlay(state, modifier = Modifier.fillMaxSize())
-        }
-        // Vertical divider (shared border)
-        Box(Modifier.width(4.dp).height(hudHeight).background(Color(0xFFF5F5DC)))
-        // Next fixed width on right
-        Box(Modifier.height(hudHeight).widthIn(min = 116.dp), contentAlignment = Alignment.TopStart) {
+        // Next box aligned to the right edge
+        Box(Modifier.height(hudHeight).width(116.dp), contentAlignment = Alignment.TopStart) {
           NextPreview(next = state.nextQueue.firstOrNull(), modifier = Modifier.fillMaxSize())
         }
       }

@@ -67,8 +67,8 @@ fun GameScreen(vm: GameViewModel = viewModel()) {
       onRight = { vm.right() },
       onUp = { vm.rotateCW() },
       onDownPress = { on -> if (on) vm.hardDrop() }, // Down button: Hard drop
-      onA = { vm.rotateCW() },  // A Button: Rotate clockwise
-      onB = { vm.rotateCCW() }, // B Button: Rotate counter-clockwise
+      onA = { vm.rotateCCW() },  // A Button: Rotate clockwise
+      onB = { vm.rotateCW() }, // B Button: Rotate counter-clockwise
       modifier = Modifier
         .fillMaxWidth()
         .align(Alignment.BottomCenter)
