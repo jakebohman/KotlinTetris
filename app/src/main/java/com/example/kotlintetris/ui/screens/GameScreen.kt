@@ -66,9 +66,9 @@ fun GameScreen(vm: GameViewModel = viewModel()) {
       onLeft = { vm.left() },
       onRight = { vm.right() },
       onUp = { vm.rotateCW() },
-      onDownPress = { on -> vm.softDrop(on) },
-      onA = { vm.rotateCW() },
-      onB = { vm.hardDrop() },
+      onDownPress = { on -> if (on) vm.hardDrop() }, // Down button: Hard drop
+      onA = { vm.rotateCW() },  // A Button: Rotate clockwise
+      onB = { vm.rotateCCW() }, // B Button: Rotate counter-clockwise
       modifier = Modifier
         .fillMaxWidth()
         .align(Alignment.BottomCenter)
@@ -84,7 +84,16 @@ fun GameScreen(vm: GameViewModel = viewModel()) {
         .offset(y = -(controllerHeight - overlap)),
       contentAlignment = Alignment.Center
     ) {
-      GameArea(state = state, modifier = Modifier.fillMaxWidth(0.85f))
+      GameArea(
+        state = state,
+        modifier = Modifier.fillMaxWidth(0.85f),
+        onTap = { vm.rotateCW() },           // Tap anywhere: Rotate clockwise
+        onSwipeLeft = { vm.left() },         // Swipe left: Move piece left
+        onSwipeRight = { vm.right() },       // Swipe right: Move piece right
+        onSwipeDown = { vm.hardDrop() },     // Swipe down: Hard drop
+        onSwipeUp = { vm.rotateCW() },       // Swipe up: Rotate piece (alternative)
+        onLongPress = { pressed -> vm.softDrop(pressed) } // Long press: Continuous soft drop
+      )
     }
 
     // Pause button top-right

@@ -2,7 +2,6 @@ package com.example.kotlintetris.ui.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -30,37 +29,31 @@ fun NextPreview(next: TetrominoType?, modifier: Modifier = Modifier) {
       .background(Color.Black)
   ) {
     Text("NEXT", color = Color.White, fontFamily = FontFamily.Monospace, fontSize = 14.sp, modifier = Modifier.padding(top = 4.dp))
-    Box(
-      modifier = Modifier
-        .width(100.dp)
-        .height(80.dp)
-        .border(1.dp, Color.White)
-        .background(Color.Transparent)
-        .padding(4.dp)
+    Canvas(modifier = Modifier
+      .width(100.dp)
+      .height(80.dp)
     ) {
-      Canvas(modifier = Modifier.matchParentSize()) {
-        val boxSize = size.minDimension
-        val cell = boxSize / 4f
-        next?.let { type ->
-          val p = Piece(type, 0, Point(0, 0))
-          val cells = p.cells()
-          val minX = cells.minOf { it.x }
-          val maxX = cells.maxOf { it.x }
-          val minY = cells.minOf { it.y }
-          val maxY = cells.maxOf { it.y }
-          val w = (maxX - minX + 1)
-          val h = (maxY - minY + 1)
-          val offsetX = ((4 - w) * cell) / 2f
-          val offsetY = ((4 - h) * cell) / 2f
-          cells.forEach { c ->
-            val x = (c.x - minX) * cell + offsetX
-            val y = (c.y - minY) * cell + offsetY
-            drawRect(
-              color = Color(type.color),
-              topLeft = Offset(x, y),
-              size = Size(cell - 1f, cell - 1f)
-            )
-          }
+      val boxSize = size.minDimension
+      val cell = boxSize / 4f
+      next?.let { type ->
+        val p = Piece(type, 0, Point(0, 0))
+        val cells = p.cells()
+        val minX = cells.minOf { it.x }
+        val maxX = cells.maxOf { it.x }
+        val minY = cells.minOf { it.y }
+        val maxY = cells.maxOf { it.y }
+        val w = (maxX - minX + 1)
+        val h = (maxY - minY + 1)
+        val offsetX = ((4 - w) * cell) / 2f
+        val offsetY = ((4 - h) * cell) / 2f
+        cells.forEach { c ->
+          val x = (c.x - minX) * cell + offsetX
+          val y = (c.y - minY) * cell + offsetY
+          drawRect(
+            color = Color(type.color),
+            topLeft = Offset(x, y),
+            size = Size(cell - 1f, cell - 1f)
+          )
         }
       }
     }

@@ -116,8 +116,8 @@ fun ControllerPanel(
       verticalAlignment = Alignment.CenterVertically,
       modifier = Modifier.padding(top = 64.dp)
     ) {
-      FramedActionButton(label = "B", onPress = onB)
       FramedActionButton(label = "A", onPress = onA)
+      FramedActionButton(label = "B", onPress = onB)
     }
   }
 }
@@ -126,12 +126,12 @@ fun ControllerPanel(
 private fun FramedActionButton(label: String, onPress: () -> Unit) {
   // Outer column: square on top, label below aligned to bottom-right of square
   Column(horizontalAlignment = Alignment.End, modifier = Modifier.width(84.dp)) {
-    // White rounded square frame with thin black border
+    // Cream rounded square frame with thin black border
     Box(
       contentAlignment = Alignment.Center,
       modifier = Modifier
         .size(84.dp)
-        .background(Color.White, RoundedCornerShape(8.dp))
+        .background(Color(0xFFF5F5DC), RoundedCornerShape(8.dp))
         //.border(1.dp, Color.Black, RoundedCornerShape(8.dp))
     ) {
       // Red circular button with thin black border
@@ -155,7 +155,7 @@ private fun FramedActionButton(label: String, onPress: () -> Unit) {
       color = Color.Red,
       fontFamily = FontFamily.Monospace, // retro-styled monospace
       fontWeight = FontWeight.Bold,
-      fontSize = 18.sp,
+      fontSize = 24.sp,
       modifier = Modifier.padding(top = 4.dp)
     )
   }
