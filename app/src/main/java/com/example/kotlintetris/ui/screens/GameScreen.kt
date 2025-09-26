@@ -23,7 +23,10 @@ fun GameScreen(vm: GameViewModel = viewModel()) {
   val controllerHeight = 220.dp
   val overlap = 80.dp
 
-  Box(Modifier.fillMaxSize().background(Color.Black)) {
+  Box(Modifier.fillMaxSize()) {
+    // Retro Tetris background
+    RetroBackground()
+
     // Controller background anchored to bottom; restore fixed height
     Box(
       modifier = Modifier
